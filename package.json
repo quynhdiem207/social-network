@@ -1,0 +1,10 @@
+{
+  "name": "social_network",
+  "version": "1.0.0",
+  "description": "Social network for developments",
+  "main": "server.js",
+  "repository": "https://diemquynh1912@bitbucket.org/diemquynh1912/social_network.git",
+  "author": "Diem-Quynh <Diem-Quynh@users.noreply.github.com>",
+  "license": "MIT",
+  "private": false
+}
