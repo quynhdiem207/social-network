@@ -268,24 +268,24 @@ class ProfileController extends BaseController {
     // @desc    Delete education from profile
     // @access  Private
     async deleteEducation(req, res, next) {
-        let error = false, errors = {}
         try {
             const profile = await Profile.findOne({ user: req.user._id })
+
             if (!profile) {
-                error = true
-                errors.msg = 'There is no profile!'
-                return res.status(404).json({ error, errors })
+                const msg = 'There is no profile!'
+                return res.status(404).json([msg])
             }
+
             const index = profile.education.map(item => String(item._id))
                 .indexOf(req.params.edu_id)
+
             if (index > -1) {
                 profile.education.splice(index, 1)
                 await profile.save()
                 return res.json(profile)
             } else {
-                error = true
-                errors.msg = "No find education matched"
-                return res.status(400).json({ error, errors })
+                const msg = "No find education matched"
+                return res.status(400).json([msg])
             }
         } catch (err) {
             next(err)
@@ -296,24 +296,24 @@ class ProfileController extends BaseController {
     // @desc    Delete experience from profile
     // @access  Private
     async deleteExperience(req, res, next) {
-        let error = false, errors = {}
         try {
             const profile = await Profile.findOne({ user: req.user._id })
+
             if (!profile) {
-                error = true
-                errors.msg = 'There is no profile!'
-                return res.status(404).json({ error, errors })
+                const msg = 'There is no profile!'
+                return res.status(404).json([msg])
             }
+
             const index = profile.experience.map(item => String(item._id))
                 .indexOf(req.params.exp_id)
+
             if (index > -1) {
                 profile.experience.splice(index, 1)
                 await profile.save()
                 return res.json(profile)
             } else {
-                error = true
-                errors.msg = "No find experience matched"
-                return res.status(400).json({ error, errors })
+                const msg = "No find experience matched"
+                return res.status(400).json([msg])
             }
         } catch (err) {
             next(err)
