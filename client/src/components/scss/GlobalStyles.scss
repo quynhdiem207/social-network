@@ -1,0 +1,363 @@
+/* Global Styles */
+@use 'variables' as *;
+
+:root {
+  --primary-color: $primary-color;
+  --dark-color: $dark-color;
+  --light-color: $light-color;
+  --danger-color: $danger-color;
+  --success-color: $danger-color;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Raleway', sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  background-color: $white-color;
+  color: $gray-color;
+}
+
+a {
+  color: $primary-color;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+img {
+  width: 100%;
+}
+
+
+/* Utilities */
+.container {
+  max-width: 1100px;
+  margin: auto;
+  overflow: hidden;
+  padding: 0 2rem;
+  margin-top: 6rem;
+  margin-bottom: 3rem;
+}
+
+
+/* Text Styles*/
+.x-large {
+  font-size: 4rem;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+.large {
+  font-size: 3rem;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+.lead {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-primary {
+  color: $primary-color;
+}
+
+.text-dark {
+  color: $dark-color;
+}
+
+
+/* Padding */
+.p {
+  padding: 0.5rem;
+}
+.p-1 {
+  padding: 1rem;
+}
+.p-2 {
+  padding: 2rem;
+}
+.p-3 {
+  padding: 3rem;
+}
+.py {
+  padding: 0.5rem 0;
+}
+.py-1 {
+  padding: 1rem 0;
+}
+.py-2 {
+  padding: 2rem 0;
+}
+.py-3 {
+  padding: 3rem 0;
+}
+
+
+/* Margin */
+.m {
+  margin: 0.5rem;
+}
+.m-1 {
+  margin: 1rem;
+}
+.m-2 {
+  margin: 2rem;
+}
+.m-3 {
+  margin: 3rem;
+}
+.my {
+  margin: 0.5rem 0;
+}
+.my-1 {
+  margin: 1rem 0;
+}
+.my-2 {
+  margin: 2rem 0;
+}
+.my-3 {
+  margin: 3rem 0;
+}
+
+
+/* Button, Badge, Alert */
+button {
+  font: inherit;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.4rem 1.3rem;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  margin-right: 0.5rem;
+  transition: opacity 0.2s ease-in;
+  outline: none;
+}
+
+.badge {
+  font-size: 0.8rem;
+  padding: 0.1rem;
+  text-align: center;
+  margin: 0.3rem;
+}
+
+.alert-wrapper {
+  position: fixed;
+  top: 4rem;
+  right: 2rem;
+  display: inline-block;
+}
+
+.alert {
+  padding: 0.8rem;
+  margin: 1rem 0;
+  position: relative;
+  opacity: 0.8;
+  border-radius: 4px;
+  box-shadow: $gray-color 2px 2px 10px;
+  transition: opacity 2s linear 1s;
+  animation: slide-in 0.8s linear;
+}
+
+@keyframes slide-in {
+  from {
+    left: 100%;
+  }
+
+  to {
+    left: 0;
+  }
+}
+
+.btn, .badge, .alert {
+  background: $light-color;
+  color: $gray-color;
+}
+
+.btn-primary,
+.bg-primary,
+.badge-primary,
+.alert-primary {
+  background: $primary-color;
+  color: $white-color;
+}
+
+.btn-light,
+.bg-light,
+.badge-light,
+.alert-light {
+  background: $light-color;
+  color: $gray-color;
+}
+
+.btn-dark,
+.bg-dark,
+.badge-dark,
+.alert-dark {
+  background: $dark-color;
+  color: $white-color;
+}
+
+.btn-danger,
+.bg-danger,
+.badge-danger,
+.alert-danger {
+  background: $danger-color;
+  color: $white-color;
+}
+
+.btn-success,
+.bg-success,
+.badge-success,
+.alert-success {
+  background: $success-color;
+  color: $white-color;
+}
+
+.btn-white,
+.bg-white,
+.badge-white,
+.alert-white {
+  background: $white-color;
+  color: $gray-color;
+  border: #ccc solid 1px;
+}
+
+.btn:hover {
+  opacity: 0.8;
+}
+
+.bg-light,
+.badge-light {
+  border: #ccc solid 1px;
+}
+
+
+/* Rounded image */
+.round-img {
+  border-radius: 50%;
+}
+
+
+/* Line */
+.line {
+  height: 1px;
+  background: #ccc;
+  margin: 1.5rem 0;
+}
+
+
+/* Overlay */
+.dark-overlay {
+  background-color: rgba(0, 0, 0, 0.7);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+
+/* Forms */
+.form {
+    .form-group {
+        margin: 1.2rem 0;
+    }
+
+    .form-text {
+        display: block;
+        margin-top: 0.3rem;
+        color: #888;
+    }
+
+    input[type='text'],
+    input[type='email'],
+    input[type='password'],
+    input[type='date'],
+    select,
+    textarea {
+        display: block;
+        width: 100%;
+        padding: 0.4rem;
+        font-size: 1.2rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    input[type='submit'] {
+        font: inherit;
+        border-radius: 4px;
+    }
+}
+
+/* tables */
+.table th,
+.table td {
+  padding: 1rem;
+  text-align: left;
+}
+
+.table th {
+  background: $light-color;
+}
+
+/* Socials */
+i.fa-twitter {
+    color: #38a1f3;
+}
+
+i.fa-facebook {
+    color: #3b5998;
+}
+
+i.fa-instagram {
+    color: #3f729b;
+}
+
+i.fa-youtube {
+    color: #c4302b;
+}
+
+i.fa-linkedin {
+    color: #0077b5;
+}
+
+
+/* Mobile Styles */
+@media (max-width: 700px) {
+  .container {
+    margin-top: 8rem;
+  }
+
+  .hide-sm {
+    display: none;
+  }
+
+  /* Text Styles */
+  .x-large {
+    font-size: 3rem;
+  }
+
+  .large {
+    font-size: 2rem;
+  }
+
+  .lead {
+    font-size: 1rem;
+  }
+}
