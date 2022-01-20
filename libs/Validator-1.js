@@ -1,7 +1,6 @@
 const { body, validationResult } = require('express-validator');
 const _ = require('lodash');
-// const validtor, { isURL } = require('validator');
-const validatorLib = require('validator');
+const { decode } = require('html-entities');
 
 const isEmpty = (value) => {
     return (
@@ -101,9 +100,8 @@ const validateFields = async (req, allowInputs) => {
 
         for (let condition in conditions) {
             if (conditions[condition] == true) {
-                const fieldData = req.body[field];
                 validator = validator.custom(
-                    () => validatorLib[condition](fieldData)
+                    (v) => decode(req.body[field])
                 ).withMessage(validateError("isValid", { field }))
             }
         }

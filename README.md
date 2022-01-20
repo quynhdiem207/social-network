@@ -22,12 +22,13 @@ MongoDB + Express + ReactJS + NodeJS
 - [config](https://www.npmjs.com/package/config): Cấu hình các tham số cho ứng dụng khi chạy ở các môi trường khác nhau.  
 - [bcyptjs](https://www.npmjs.com/package/bcryptjs): Mã hóa.  
 - [jsonwwbtoken](https://www.npmjs.com/package/jsonwebtoken): Tạo & check token.  
-- [request](https://github.com/request/): Tạo HTTP request.  
+- [axios](https://www.npmjs.com/package/axios): Là HTTP client dựa trên promise cho browser & nodejs.  
 - [passport](https://www.passportjs.org/docs/downloads/html/): Middleware giúp authenticate.  
 - [passport-jwt](https://www.npmjs.com/package/passport-jwt): Middleware giúp authenticate với jwt.  
 - [validator](https://www.npmjs.com/package/validator) / [express-validator](https://express-validator.github.io/docs/) / [Joi](https://joi.dev/api/?v=17.4.2): Validate giá trị input.  
 - [await-to-js](https://www.npmjs.com/package/await-to-js): Hữu ích xử lý lỗi async/await.  
 - [cross-env](https://www.npmjs.com/package/cross-env): Truyền biến môi trường khi chạy command line.  
+- [html-entities](https://www.npmjs.com/package/html-entities): encode & decode HTML entities.  
 
 ### Libraries for dev:  
 
@@ -44,3 +45,4 @@ MongoDB + Express + ReactJS + NodeJS
 - [redux-devtools-extension](https://www.npmjs.com/package/redux-devtools-extension): Theo dõi state.  
 - [moment](https://www.npmjs.com/package/moment): JS date library.  
 - [react-moment](https://www.npmjs.com/package/react-moment): React component for the moment date library.  
+- [html-entities](https://www.npmjs.com/package/html-entities): encode & decode HTML entities.  

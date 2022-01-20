@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import clsx from 'clsx';
 
 import { createProfile } from "../../actions/profile";
-import styles from "../scss/ProfileForms.module.scss";
 
 const CreateProfile = ({ createProfile, history }) => {
     const [formData, setFormData] = useState({
@@ -159,7 +158,7 @@ const CreateProfile = ({ createProfile, history }) => {
                 </div>
 
                 {displaySocialInputs && (<>
-                    <div className={clsx("form-group", styles.socialInput)}>
+                    <div className={clsx("form-group", "social-input")}>
                         <i className="fab fa-twitter fa-2x"></i>
                         <input
                             type="text"
@@ -170,7 +169,7 @@ const CreateProfile = ({ createProfile, history }) => {
                         />
                     </div>
 
-                    <div className={clsx("form-group", styles.socialInput)}>
+                    <div className={clsx("form-group", "social-input")}>
                         <i className="fab fa-facebook fa-2x"></i>
                         <input
                             type="text"
@@ -181,7 +180,7 @@ const CreateProfile = ({ createProfile, history }) => {
                         />
                     </div>
 
-                    <div className={clsx("form-group", styles.socialInput)}>
+                    <div className={clsx("form-group", "social-input")}>
                         <i className="fab fa-youtube fa-2x"></i>
                         <input
                             type="text"
@@ -192,7 +191,7 @@ const CreateProfile = ({ createProfile, history }) => {
                         />
                     </div>
 
-                    <div className={clsx("form-group", styles.socialInput)}>
+                    <div className={clsx("form-group", "social-input")}>
                         <i className="fab fa-linkedin fa-2x"></i>
                         <input
                             type="text"
@@ -203,7 +202,7 @@ const CreateProfile = ({ createProfile, history }) => {
                         />
                     </div>
 
-                    <div className={clsx("form-group", styles.socialInput)}>
+                    <div className={clsx("form-group", "social-input")}>
                         <i className="fab fa-instagram fa-2x"></i>
                         <input
                             type="text"

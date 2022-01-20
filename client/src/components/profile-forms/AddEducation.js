@@ -69,7 +69,7 @@ const AddEducation = ({ addEducation, history }) => {
                         required
                     />
                 </div>
-                <div class="form-group">
+                <div className="form-group">
                     <input
                         type="text"
                         placeholder="Field Of Study"

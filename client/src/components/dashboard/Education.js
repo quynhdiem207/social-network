@@ -11,11 +11,11 @@ const Education = ({ education, deleteEducation }) => {
             <td>{edu.school}</td>
             <td className="hide-sm">{edu.degree}</td>
             <td className="hide-sm">
-                <Moment format='YYYY-MM-DD'>{edu.from}</Moment> - {
+                <Moment format='YYYY/MM/DD'>{edu.from}</Moment> - {
                     edu.to === null ? (
                         ' Now'
                     ) : (
-                        <Moment format='YYYY-MM-DD'>{edu.to}</Moment>
+                        <Moment format='YYYY/MM/DD'>{edu.to}</Moment>
                     )
                 }
             </td>
@@ -31,13 +31,13 @@ const Education = ({ education, deleteEducation }) => {
     )))
     return (
         <>
-            <h2 class="my-2">Education Credentials</h2>
-            <table class="table">
+            <h2 className="my-2">Education Credentials</h2>
+            <table className="table">
                 <thead>
                     <tr>
                         <th>School</th>
-                        <th class="hide-sm">Degree</th>
-                        <th class="hide-sm">Years</th>
+                        <th className="hide-sm">Degree</th>
+                        <th className="hide-sm">Years</th>
                         <th />
                     </tr>
                 </thead>

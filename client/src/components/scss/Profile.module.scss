@@ -1,0 +1,114 @@
+@use 'variables' as *;
+
+.profileGrid {
+    display: grid;
+    grid-template-areas:
+        'top top'
+        'about about'
+        'exp edu'
+        'github github';
+    grid-gap: 1rem;
+}
+
+.profileTop {
+    grid-area: top;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    img {
+        width: 250px;
+    }
+
+    .icons a {
+        color: $white-color;
+        margin: 0 0.3rem;
+
+        &:hover {
+            color: $dark-color;
+        }
+    }
+}
+
+.profileAbout {
+    grid-area: about;
+    text-align: center;
+
+    .skills {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+}
+
+.profileExp {
+    grid-area: exp;
+}
+
+.profileEdu {
+    grid-area: edu;
+}
+
+.profileExp,
+.profileEdu {
+    h2 {
+        margin-bottom: 1rem;
+    }
+
+    > div {
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: #ccc 1px dotted;
+    }
+
+    > div:last-child {
+        border: 0;
+    }
+    
+    p {
+        margin: 0.5rem 0;
+    }
+} 
+
+.profileGithub {
+    grid-area: github;
+
+    .repo {
+        display: flex;
+
+        > div:first-child {
+            flex: 7;
+            flex-basis: 70%;
+        }
+    }
+
+    > div:last-child {
+        flex: 3;
+        flex-basis: 20%;
+    }
+}
+
+
+@media (max-width: 700px) {
+    .profileTop img,
+    .profile img {
+        width: 200px;
+        margin: auto;
+    }
+
+    .profileGrid {
+        grid-template-areas:
+        'top'
+        'about'
+        'exp'
+        'edu'
+        'github';
+    }
+
+    .profileAbout .skills {
+        flex-direction: column;
+    }
+}

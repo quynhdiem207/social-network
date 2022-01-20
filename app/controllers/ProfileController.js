@@ -1,4 +1,4 @@
-const request = require('request');
+const axios = require('axios');
 const moment = require('moment');
 
 const Post = require('../models/Post');
@@ -20,24 +20,6 @@ class ProfileController extends BaseController {
         }
     }
 
-    // @route   [GET] api/me/profile
-    // @desc    Get current user profile
-    // @access  Private
-    async show(req, res, next) {
-        try {
-            const profile = await Profile.findOne({ user: req.user._id })
-                .populate('user', ['name', 'avatar']).lean()
-            if (!profile) {
-                return res.status(404).json({
-                    msg: 'There is no profile for this user!'
-                })
-            }
-            res.json(profile)
-        } catch (err) {
-            next(err)
-        }
-    }
-
     // @route   [GET] api/profiles/user/:user_id
     // @desc    Get profile by user ID
     // @access  Public
@@ -46,14 +28,14 @@ class ProfileController extends BaseController {
             const profile = await Profile.findOne({ user: req.params.user_id })
                 .populate('user', ['name', 'avatar']).lean()
             if (!profile) {
-                return res.status(404).json({
-                    msg: 'There is no profile for this user!'
-                })
+                const msg = 'There is no profile for this user!'
+                return res.status(404).json([msg])
             }
             return res.json(profile)
         } catch (err) {
             if (err.kind == "ObjectId") {
-                return res.status(404).json({ msg: 'Profile not found!' })
+                const msg = 'Profile not found!'
+                return res.status(404).json([msg])
             }
             next(err)
         }
@@ -63,40 +45,44 @@ class ProfileController extends BaseController {
     // @desc    Get user repos from github
     // @access  Public
     async getGithubRepos(req, res, next) {
-        const { GITHUB_CLIENT_ID, GITHUB_SECRET_KEY } = require('@config/github')
-        const options = {
-            uri: `https://api.github.com/users/${req.params.username}/repos?per_page=5&sort=created:asc&client_id=${GITHUB_CLIENT_ID}&client_secret=${GITHUB_SECRET_KEY}`,
-            method: "GET",
-            headers: { 'user-agent': 'node.js' }
+        // const { GITHUB_CLIENT_ID, GITHUB_SECRET_KEY } = require('@config/github')
+        // const headers = { 'user-agent': 'node.js' }
+        // const uri = `https://api.github.com/users/${req.params.username}/repos?per_page=5&sort=created:asc&client_id=${GITHUB_CLIENT_ID}&client_secret=${GITHUB_SECRET_KEY}`
+
+        const { GITHUB_ACCESS_TOKEN } = require('@config/github')
+        const headers = {
+            'user-agent': 'node.js',
+            Authorization: `token ${GITHUB_ACCESS_TOKEN}`
         }
-        request(options, (err, response, body) => {
-            if (err) return next(err)
-            if (response.statusCode !== 200) {
-                let error = true, errors = { msg: 'No Github profile found!' }
-                return res.status(404).json({ error, errors })
+        const uri = `https://api.github.com/users/${req.params.username}/repos?per_page=5&sort=created:asc`
+
+        try {
+            const githubRes = await axios.get(uri, { headers })
+            if (githubRes.status !== 200) {
+                const msg = 'No Github profile found!'
+                return res.status(404).json([msg])
             }
-            return res.json(JSON.parse(body))
-        })
+            return res.json(githubRes.data)
+        } catch (err) {
+            return next(err)
+        }
     }
 
-    // Get profile fields
-    static profileFieldsInfo(data) {
-        let profileFields = { ...data }
-
-        if (data.skills) {
-            profileFields.skills = data.skills.split(',')
+    // @route   [GET] api/me/profile
+    // @desc    Get current user profile
+    // @access  Private
+    async show(req, res, next) {
+        try {
+            const profile = await Profile.findOne({ user: req.user._id })
+                .populate('user', ['name', 'avatar']).lean()
+            if (!profile) {
+                const msg = 'There is no profile for this user!'
+                return res.status(404).json([msg])
+            }
+            res.json(profile)
+        } catch (err) {
+            next(err)
         }
-
-        // social
-        profileFields.social = {}
-
-        data.youtube && (profileFields.social.youtube = data.youtube)
-        data.twitter && (profileFields.social.twitter = data.twitter)
-        data.facebook && (profileFields.social.facebook = data.facebook)
-        data.linkedin && (profileFields.social.linkedin = data.linkedin)
-        data.instagram && (profileFields.social.instagram = data.instagram)
-
-        return profileFields
     }
 
     // @route   [POST] api/me/profile
@@ -121,10 +107,26 @@ class ProfileController extends BaseController {
         let { error, errors } = await super.validate_1(req, allowedFields)
         if (error) return res.status(400).json(errors)
 
-        const profileFields = ProfileController.profileFieldsInfo(req.body);
+        const {
+            skills, youtube, twitter, facebook, linkedin, instagram, ...rest
+        } = req.body;
+
+        const social = { youtube, twitter, facebook, linkedin, instagram }
+
+        for (const key in social) {
+            if (social.hasOwnProperty(key)) {
+                !social[key] && delete social[key];
+            }
+        }
+
+        const profileFields = {
+            user: req.user._id,
+            skills: skills.split(','),
+            social,
+            ...rest
+        };
 
         try {
-            profileFields.user = req.user._id
             const profile = await Profile.findOne({ user: profileFields.user }).lean()
             if (profile) {
                 // Update
@@ -235,7 +237,7 @@ class ProfileController extends BaseController {
         const conditions = {
             school: { type: "string", required: true },
             degree: { type: "string", required: true },
-            fieldofstudy: { type: "string", required: true },
+            fieldofstudy: { type: "string" },
             from: { type: "date", required: true },
             to: { type: "date" },
             current: { type: "boolean" },

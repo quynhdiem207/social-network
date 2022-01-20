@@ -1,12 +1,16 @@
 ## Joi library
 
-1. Tạo schema:  
+Hỗ trợ validate dữ liệu:
+
+### 1. Tạo schema:  
 
 - **types()**: Trả về obj mà các key chứa các schema obj đã được tạo khớp với kdl tương ứng key.  
+
     ```js
     const {string} = Joi.types
     const schema = string.min(8) // Joi.string().min(8)
     ```  
+
 - **any()**: Tạo schema obj khớp với bất kỳ kdl nào.  
 - **string()**: Tạo schema obj khớp với kdl string.  
 - **number()**: Tạo schema obj khớp với kdl number.  
@@ -15,17 +19,165 @@
 - **array()**: Tạo schema obj khớp với kdl array.  
 - **object()**: Tạo schema obj khớp với kdl object.  
 
-2. Tạo references: **ref(key, [options])**.  
-Prefix of key: **$** (global context), **#** (local context), **/** (root).  
-Relative:  
->- separator prefix: **.** (self), **..** (parent - no prefix), **...** (grandparent), etc.  
->- ancestor option: {ancestor: number} with number: 0 (seft), 1 (parent), etc.    
+```js
+const schema = Joi.object().keys({
+    a: Joi.string()
+});
+```
 
-Tạo reference: **in(key, [options])** mà được sử dụng như mảng các values.  
 
-3. Link: **link(ref)** liên kết đến another schema node, sử dụng lại nó để xác thực.  
+### 2. Tạo references
 
-4. Các method của **any** schema:  
+- **ref(key, [options])** hỗ trợ tạo tham chiếu, yêu cầu 2 giá trị phải bằng nhau.  
+
+    Prefix of key: **$** (global context), **#** (local context), **/** (root).  
+
+    ```js
+    // root
+    {
+        x: {
+            a: Joi.any(),
+            b: {
+                c: Joi.ref('/x.a')
+            }
+        }
+    }
+
+    // local context
+    const schema = Joi.any()
+        .warning('custom.x', { w: 'world' })
+        .message({ 'custom.x': 'hello {#w}!' });
+
+    // global context
+    const schema = Joi.object({
+        a: Joi.ref('b.c'),
+        b: {
+            c: Joi.any()
+        },
+        c: Joi.ref('$x')
+    });
+
+    await schema.validateAsync({ a: 5, b: { c: 5 } }, { context: { x: 5 } });
+    ```
+
+    Relative prefix:  
+    >- separator prefix: **.** (self), **..** (parent - no prefix), **...** (grandparent), etc.  
+    >- ancestor option: **{ancestor: number}** với number: 0 (seft), 1 (parent), etc.    
+
+    ```js
+    // separator prefix
+    {
+        x: {
+            a: Joi.any(),
+            b: {
+                c: Joi.any(),
+                d: Joi.ref('..'),   // Tham chiếu đến parent của nó
+                e: Joi.ref('c'),    // Tham chiếu đến c là con của parent của nó (c là anh chị em của nó)
+                f: Joi.ref('...a'), // Tham chiếu đến a là con của grandparent của nó (a là chú bác của nó)
+                g: Joi.ref('....y')
+            }
+        },
+        y: Joi.any()
+    }
+
+    // ancestor option
+    {
+        x: {
+            a: Joi.any(),
+            b: {
+                c: Joi.any(),
+                d: Joi.ref('c', { ancestor: 1 }),
+                e: Joi.ref('a', { ancestor: 2 }),
+                f: Joi.ref('y', { ancestor: 3 })
+            }
+        },
+        y: Joi.any()
+    }
+    ```
+
+- **in(key, [options])** hỗ trợ tạo reference mà được sử dụng như mảng các values để khớp với rule.  
+
+    ```js
+    const schema = Joi.object({
+        a: Joi.array().items(Joi.number()),
+        b: Joi.number().valid(Joi.in('a')) // b phải là một trong các phần tử của a
+    });
+    ```
+
+
+### 3. Link
+
+**link(ref)** liên kết đến another schema node, sử dụng lại nó để xác thực.  
+
+```js
+// Named links (id):
+const person = Joi.object({
+    firstName: Joi.string().required(),
+    lastName: Joi.string().required(),
+    children: Joi.array()
+        .items(Joi.link('#person'))
+}).id('person');
+
+// Relative links:
+const person = Joi.object({
+    firstName: Joi.string().required(),
+    lastName: Joi.string().required(),
+    children: Joi.array().items(Joi.link('...'))
+        // . - the link
+        // .. - the children array
+        // ... - the person object
+});
+
+// Absolute links:
+const person = Joi.object({
+    firstName: Joi.string().required(),
+    lastName: Joi.string().required(),
+    children: Joi.array().items(Joi.link('/'))
+});
+```
+
+
+### 4. Validate
+
+Các values sẽ được validate dựa trên *schema*, throw error nếu fail:  
+
+```js
+const schema = Joi.object({
+    a: Joi.string()
+});
+
+// C1:
+const { error, value } = schema.validate({ a: 'a string' });
+
+// C2:
+try {
+    const value = await schema.validateAsync({ a: 'a string' });
+} catch(error) {
+    console.log(error)
+}
+```
+
+
+### 4.1, assert(value, schema, [message], [options])
+
+Validate một value dựa trên *schema*, throw error nếu fail:  
+
+```js
+Joi.assert('x', Joi.number()); // throws error
+```
+
+
+### 4.2, attempt(value, schema, [message], [options]) 
+
+Validate một value dựa trên *schema*, trả về valid result, throw error nếu fail:  
+
+```js
+Joi.attempt('x', Joi.number()); // throws error
+const result = Joi.attempt('4', Joi.number()); // result -> 4
+```
+
+
+### 5. Các method của *any* schema:  
 
 - **empty(schema)**: Cho phép các empty value match với schema & gán undefined cho value.  
     undefined schema sẽ không áp dụng quy tắc này, mà sẽ tạo error không cho phép empty.  
@@ -68,7 +220,8 @@ Tạo reference: **in(key, [options])** mà được sử dụng như mảng cá
 - **validate(value, [options])** / **validateAsync(value, [options])**: Validate a value, return obj với các key: value, error, warning, artifacts.  
     options: {context: {}, convert: true, dateFormat, etc}  
 
-4. Các method của **string** schema:  
+
+### 6. Các method của *string* schema:  
 
 - **alphanum()**: string chỉ chứa [a-zA-Z0-9].  
 - **token()**: string chỉ chứa [a-zA-Z0-9_].  
@@ -97,7 +250,8 @@ Tạo reference: **in(key, [options])** mà được sử dụng như mảng cá
 - **domain()**: string là domain hợp lệ.  
 - **ip()**: string là ip hợp lệ.  
 
-5. Các method của **number** schema:  
+
+### 7. Các method của *number* schema:  
 
 - **integer()**: number phải là số nguyên.  
 - **positive()**: number phải là số dương.  
@@ -109,13 +263,15 @@ Tạo reference: **in(key, [options])** mà được sử dụng như mảng cá
 - **precision()**: Xác định độ chính xác sau dấu thập phân.  
 - **port()**: number phải là TCP port hợp lệ.  
 
-6. Các method của **boolean** schema:  
+
+### 8. Các method của *boolean* schema:  
 
 - **falsy()**: bổ sung các giá trị được convert thành false, yêu cầu options {convert:true}.  
 - **truthy()**: bổ sung các giá trị được convert thành true, yêu cầu options {convert:true}.  
 - **sensitive([enabled])**: so khớp các giá trị falsy & truthy được bổ sung phân biệt chữ hoa & thường.  
 
-7. Các method của **date** schema:  
+
+### 9. Các method của *date* schema:  
 
 - **iso()**: string value phải là định dạng date ISO 8601.  
 - **less()**: chỉ định date phải nhỏ hơn limit.  
@@ -124,7 +280,8 @@ Tạo reference: **in(key, [options])** mà được sử dụng như mảng cá
 - **max()**: chỉ định date lớn nhất được phép.  
 - **timestamp([type])**: chỉ định kiểu timestamp là 'unix' (seconds) hay 'javascript' (miliseconds).  
 
-8. Các method của **array** schema:  
+
+### 10. Các method của *array* schema:  
 
 - **length()**: chỉ định số lượng chính xác các phần tử của mảng.  
 - **min()**: chỉ định số lượng tối đa các phần tử của mảng.  
@@ -136,7 +293,8 @@ Tạo reference: **in(key, [options])** mà được sử dụng như mảng cá
 - **sparse([enabled])**: cho phép mảng chấp nhận phần tử undefined.  
 - **single([enabled])**: cho phép giá trị đơn lẻ validate như thể mảng.  
 
-9. Các method của **object** schema:  
+
+### 11. Các method của *object* schema:  
 
 - **keys(schema)**: set or extend các obj key.  
 - **append(schema)**: append các obj key.  
@@ -148,3 +306,20 @@ Tạo reference: **in(key, [options])** mà được sử dụng như mảng cá
 - **with(key, ...peers)**: Chỉ định khi key hiện diện thì các key khác phải hiện diện.  
 - **without(key, ...peers)**: Chỉ định khi key hiện diện thì các key khác KHÔNG được phép hiện diện.  
 - **pattern(pattern, schema, [options])**: Xác định các quy tắc xác thực cho các key unknown match với pattern.  
+
+
+## Ví dụ
+
+```js
+const inputSchema = Joi.object({
+    email: Joi.string().exist().email(),
+    password: Joi.string().exist()
+})
+
+let [err] = await to(inputSchema.validateAsync(req.body))
+
+if (err) {
+    const errDetail = err.details[0].message
+    return res.status(400).json([errDetail])
+}
+```

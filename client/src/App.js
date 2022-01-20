@@ -1,21 +1,27 @@
 import { useLayoutEffect } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-
 import { Provider } from "react-redux";
+
 import store from "./store";
 import { loadUser } from './actions/auth';
 
 import { GlobalStyles } from "./components/layouts";
 import { Navbar } from "./components/layouts";
 import { Landing } from "./components/layouts";
+import { Alert } from "./components/layouts";
+
 import { Login } from "./components/auth";
 import { Register } from "./components/auth";
-import { Alert } from "./components/layouts";
+
+import Profiles from "./components/profiles/Profiles";
+import Profile from "./components/profile/Profile";
+
 import Dashboard from "./components/dashboard/Dashboard";
-import CreateProfile from "./components/profile-forms/CreateProfile";
-import EditProfile from "./components/profile-forms/EditProfile";
-import AddExperience from "./components/profile-forms/AddExperience";
-import AddEducation from "./components/profile-forms/AddEducation";
+import { CreateProfile } from "./components/profile-forms";
+import { EditProfile } from "./components/profile-forms";
+import { AddExperience } from "./components/profile-forms";
+import { AddEducation } from "./components/profile-forms";
+
 import PrivateRoute from "./components/routing/PrivateRoute";
 
 const App = () => {
@@ -34,13 +40,24 @@ const App = () => {
                         <Alert />
                         <Switch>
                             <Route
-                                exact path="/login"
+                                exact
+                                path="/login"
                                 component={Login}
                             />
                             <Route
                                 exact
                                 path="/register"
                                 component={Register}
+                            />
+                            <Route
+                                exact
+                                path="/profiles"
+                                component={Profiles}
+                            />
+                            <Route
+                                exact
+                                path="/profile/:user_id"
+                                component={Profile}
                             />
                             <PrivateRoute
                                 exact

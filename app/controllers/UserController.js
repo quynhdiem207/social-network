@@ -1,9 +1,11 @@
 const gravatar = require('gravatar')
+const Joi = require('joi')
 const bcrypt = require('bcryptjs')
+const to = require('await-to-js').default;
 
-const User = require('../models/User');
-const Auth = require('@libs/Auth')
 const BaseController = require('./BaseController')
+const User = require('../models/User');
+const Auth = require('@libs/Auth');
 
 class UserController extends BaseController {
 
@@ -11,13 +13,26 @@ class UserController extends BaseController {
     // @desc    Register user
     // @access  Public
     async register(req, res, next) {
-        const allowedInputs = {
-            name: { type: 'string', required: true },
-            email: { type: 'string', required: true, isEmail: true },
-            password: { type: 'string', required: true, length: { min: 8 } },
+        const inputSchema = Joi.object({
+            name: Joi.string().required(),
+            email: Joi.string().required().email(),
+            password: Joi.string().required().min(8)
+        })
+
+        let [err] = await to(inputSchema.validateAsync(req.body))
+
+        if (err) {
+            const errDetail = err.details[0].message
+            return res.status(400).json([errDetail])
         }
-        let { error, errors } = await super.validate_1(req, allowedInputs)
-        if (error) return res.status(400).json(errors)
+
+        // const allowedInputs = {
+        //     name: { type: 'string', required: true },
+        //     email: { type: 'string', required: true, isEmail: true },
+        //     password: { type: 'string', required: true, length: { min: 8 } },
+        // }
+        // let { error, errors } = await super.validate_1(req, allowedInputs)
+        // if (error) return res.status(400).json(errors)
 
         try {
             const { name, password, email } = req.body

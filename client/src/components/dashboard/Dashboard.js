@@ -4,12 +4,12 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import clsx from "clsx";
 
-import Spinner from '../layouts/Spinner';
+import { Spinner } from '../layouts';
+import { Modal } from "../layouts";
 import DashboardActions from './DashboardActions';
 import Experience from './Experience';
 import Education from './Education';
 import { getCurrentProfile, deleteAccount } from '../../actions/profile';
-import Modal from "../layouts/Modal";
 
 const Dashboard = ({
     getCurrentProfile,
@@ -20,7 +20,7 @@ const Dashboard = ({
 
     useEffect(() => {
         getCurrentProfile();
-    }, []);
+    }, [getCurrentProfile]);
 
     const [chooseDelete, setChooseDelete] = useState(false);
 
@@ -34,7 +34,7 @@ const Dashboard = ({
 
     const onDelete = useCallback(() => {
         deleteAccount();
-    }, [])
+    }, [deleteAccount])
 
     return (
         loading && profile === null ? <Spinner /> : <Fragment>
@@ -69,12 +69,12 @@ const Dashboard = ({
                 />
             )}
 
-            <div class="my-2">
+            <div className="my-2">
                 <button
-                    class="btn btn-danger"
+                    className="btn btn-danger"
                     onClick={onDeleteAccount}
                 >
-                    <i class="fas fa-user-minus"></i> {' '}
+                    <i className="fas fa-user-minus"></i> {' '}
                     Delete My Account
                 </button>
             </div>
