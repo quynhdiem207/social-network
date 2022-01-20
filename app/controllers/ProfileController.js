@@ -58,13 +58,10 @@ class ProfileController extends BaseController {
 
         try {
             const githubRes = await axios.get(uri, { headers })
-            if (githubRes.status !== 200) {
-                const msg = 'No Github profile found!'
-                return res.status(404).json([msg])
-            }
             return res.json(githubRes.data)
         } catch (err) {
-            return next(err)
+            const msg = 'No Github profile found!'
+            return res.status(404).json(msg)
         }
     }
 
