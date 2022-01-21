@@ -1,8 +1,9 @@
-import { useLayoutEffect } from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { useEffect } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Provider } from "react-redux";
 
 import store from "./store";
+import setAuthToken from "./utils/setAuthToken";
 import { loadUser } from './actions/auth';
 
 import { GlobalStyles } from "./components/layouts";
@@ -13,20 +14,29 @@ import { Alert } from "./components/layouts";
 import { Login } from "./components/auth";
 import { Register } from "./components/auth";
 
+import Dashboard from "./components/dashboard/Dashboard";
+// import { CreateProfile } from "./components/profile-forms";
+import { ProfileForm } from "./components/profile-forms";
+import { AddExperience } from "./components/profile-forms";
+import { AddEducation } from "./components/profile-forms";
+
 import Profiles from "./components/profiles/Profiles";
 import Profile from "./components/profile/Profile";
 
-import Dashboard from "./components/dashboard/Dashboard";
-import { CreateProfile } from "./components/profile-forms";
-import { EditProfile } from "./components/profile-forms";
-import { AddExperience } from "./components/profile-forms";
-import { AddEducation } from "./components/profile-forms";
+import Posts from "./components/posts/Posts";
 
 import PrivateRoute from "./components/routing/PrivateRoute";
 
 const App = () => {
 
-    useLayoutEffect(() => {
+    useEffect(() => {
+        // check for token in Local Storage when app first runs
+        if (localStorage.token) {
+            // if there is a token set axios headers for all requests
+            setAuthToken(localStorage.token);
+        }
+
+        // try to fetch a user, if no token or invalid token we will get a 401 response from our API
         store.dispatch(loadUser());
     }, [])
 
@@ -35,57 +45,50 @@ const App = () => {
             <BrowserRouter>
                 <GlobalStyles>
                     <Navbar />
-                    <Route exact path="/" component={Landing} />
-                    <section className="container">
-                        <Alert />
-                        <Switch>
-                            <Route
-                                exact
-                                path="/login"
-                                component={Login}
-                            />
-                            <Route
-                                exact
-                                path="/register"
-                                component={Register}
-                            />
-                            <Route
-                                exact
-                                path="/profiles"
-                                component={Profiles}
-                            />
-                            <Route
-                                exact
-                                path="/profile/:user_id"
-                                component={Profile}
-                            />
-                            <PrivateRoute
-                                exact
-                                path="/dashboard"
-                                component={Dashboard}
-                            />
-                            <PrivateRoute
-                                exact
-                                path="/create-profile"
-                                component={CreateProfile}
-                            />
-                            <PrivateRoute
-                                exact
-                                path="/edit-profile"
-                                component={EditProfile}
-                            />
-                            <PrivateRoute
-                                exact
-                                path="/add-experience"
-                                component={AddExperience}
-                            />
-                            <PrivateRoute
-                                exact
-                                path="/add-education"
-                                component={AddEducation}
-                            />
-                        </Switch>
-                    </section>
+                    <Alert />
+                    <Routes>
+                        <Route path="/" element={<Landing />} />
+                        <Route
+                            path="login"
+                            element={<Login />}
+                        />
+                        <Route
+                            path="register"
+                            element={<Register />}
+                        />
+                        <Route
+                            path="profiles"
+                            element={<Profiles />}
+                        />
+                        <Route
+                            path="profile/:id"
+                            element={<Profile />}
+                        />
+                        <Route
+                            path="dashboard"
+                            element={<PrivateRoute component={Dashboard} />}
+                        />
+                        <Route
+                            path="create-profile"
+                            element={<PrivateRoute component={ProfileForm} />}
+                        />
+                        <Route
+                            path="edit-profile"
+                            element={<PrivateRoute component={ProfileForm} />}
+                        />
+                        <Route
+                            path="add-experience"
+                            element={<PrivateRoute component={AddExperience} />}
+                        />
+                        <Route
+                            path="add-education"
+                            element={<PrivateRoute component={AddEducation} />}
+                        />
+                        <Route
+                            path="posts"
+                            element={<PrivateRoute component={Posts} />}
+                        />
+                    </Routes>
                 </GlobalStyles>
             </BrowserRouter>
         </Provider>

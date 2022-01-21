@@ -1,5 +1,6 @@
 const axios = require('axios');
 const moment = require('moment');
+const entities = require('entities');
 
 const Post = require('../models/Post');
 const Profile = require('../models/Profile');
@@ -61,7 +62,7 @@ class ProfileController extends BaseController {
             return res.json(githubRes.data)
         } catch (err) {
             const msg = 'No Github profile found!'
-            return res.status(404).json(msg)
+            return res.status(404).json([msg])
         }
     }
 
@@ -76,7 +77,7 @@ class ProfileController extends BaseController {
                 const msg = 'There is no profile for this user!'
                 return res.status(404).json([msg])
             }
-            res.json(profile)
+            return res.json(profile)
         } catch (err) {
             next(err)
         }
@@ -174,7 +175,7 @@ class ProfileController extends BaseController {
             // Remove user
             await User.findOneAndRemove({ _id: req.user._id })
 
-            return res.json({ msg: 'User deleted!' })
+            return res.json('User deleted!')
         } catch (err) {
             next(err)
         }

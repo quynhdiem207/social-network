@@ -1,4 +1,4 @@
-import { Link, withRouter } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import clsx from "clsx";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -6,7 +6,9 @@ import PropTypes from 'prop-types';
 import { logout } from '../../actions/auth'
 import styles from '../scss/Navbar.module.scss';
 
-const Navbar = ({ auth: { isAuthenticated, loading }, logout, history }) => {
+const Navbar = ({ auth: { isAuthenticated }, logout }) => {
+    const navigate = useNavigate();
+
     const guestLinks = (
         <ul>
             <li><Link to="/profiles">Developers</Link></li>
@@ -18,6 +20,7 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout, history }) => {
     const authLinks = (
         <ul>
             <li><Link to="/profiles">Developers</Link></li>
+            <li><Link to="/posts">Posts</Link></li>
             <li>
                 <Link to="/dashboard">
                     <i className={clsx('fas', 'fa-user')} /> {' '}
@@ -25,7 +28,7 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout, history }) => {
                 </Link>
             </li>
             <li>
-                <a href='#!' onClick={() => logout(history)}>
+                <a href='#!' onClick={() => logout(navigate)}>
                     <i className={clsx('fas', 'fa-sign-out-alt')} /> {' '}
                     <span className='hide-sm'>Logout</span>
                 </a>
@@ -38,7 +41,7 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout, history }) => {
             <h1>
                 <Link to="/"><i className="fas fa-code"></i> DevConnector</Link>
             </h1>
-            {!loading && (isAuthenticated ? authLinks : guestLinks)}
+            {isAuthenticated ? authLinks : guestLinks}
         </nav>
     )
 }
@@ -52,4 +55,4 @@ const mapStateToProps = state => ({
     auth: state.auth
 })
 
-export default connect(mapStateToProps, { logout })(withRouter(Navbar));
+export default connect(mapStateToProps, { logout })(Navbar);

@@ -1,21 +1,20 @@
-import { useEffect, useState, useCallback, Fragment } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import clsx from "clsx";
 
-import { Spinner } from '../layouts';
-import { Modal } from "../layouts";
 import DashboardActions from './DashboardActions';
 import Experience from './Experience';
 import Education from './Education';
+import { Modal } from "../layouts";
 import { getCurrentProfile, deleteAccount } from '../../actions/profile';
 
 const Dashboard = ({
     getCurrentProfile,
     deleteAccount,
     auth: { user },
-    profile: { loading, profile }
+    profile: { profile }
 }) => {
 
     useEffect(() => {
@@ -37,7 +36,7 @@ const Dashboard = ({
     }, [deleteAccount])
 
     return (
-        loading && profile === null ? <Spinner /> : <Fragment>
+        <section className="container">
             <h1 className={clsx('large', 'text-primary')}>Dashboard</h1>
             <p className='lead'>
                 <i className={clsx('fas', 'fa-user')} /> Welcome {user && user.name}
@@ -78,7 +77,7 @@ const Dashboard = ({
                     Delete My Account
                 </button>
             </div>
-        </Fragment>
+        </section>
     )
 }
 

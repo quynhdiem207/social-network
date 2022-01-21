@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { addEducation } from '../../actions/profile';
 
-const AddEducation = ({ addEducation, history }) => {
+const AddEducation = ({ addEducation }) => {
+    const navigate = useNavigate();
+
     const [formData, setFormData] = useState({
         school: '',
         degree: '',
@@ -15,8 +17,6 @@ const AddEducation = ({ addEducation, history }) => {
         current: false,
         description: ''
     })
-
-    const [toDateDisabled, toggleDisabled] = useState(false)
 
     const {
         school,
@@ -35,11 +35,11 @@ const AddEducation = ({ addEducation, history }) => {
 
     const onSubmit = e => {
         e.preventDefault();
-        addEducation(formData, history);
+        addEducation(formData, navigate);
     }
 
     return (
-        <>
+        <section className="container">
             <h1 className="large text-primary">
                 Add Your Education
             </h1>
@@ -48,14 +48,14 @@ const AddEducation = ({ addEducation, history }) => {
                 Add any school, bootcamp, etc that you have attended
             </p>
             <small>* = required field</small>
-            <form className="form" onSubmit={e => onSubmit(e)}>
+            <form className="form" onSubmit={onSubmit}>
                 <div className="form-group">
                     <input
                         type="text"
                         placeholder="* School or Bootcamp"
                         name="school"
                         value={school}
-                        onChange={e => onChange(e)}
+                        onChange={onChange}
                         required
                     />
                 </div>
@@ -65,7 +65,7 @@ const AddEducation = ({ addEducation, history }) => {
                         placeholder="* Degree or Certificate"
                         name="degree"
                         value={degree}
-                        onChange={e => onChange(e)}
+                        onChange={onChange}
                         required
                     />
                 </div>
@@ -75,7 +75,7 @@ const AddEducation = ({ addEducation, history }) => {
                         placeholder="Field Of Study"
                         name="fieldofstudy"
                         value={fieldofstudy}
-                        onChange={e => onChange(e)}
+                        onChange={onChange}
                     />
                 </div>
                 <div className="form-group">
@@ -84,7 +84,7 @@ const AddEducation = ({ addEducation, history }) => {
                         type="date"
                         name="from"
                         value={from}
-                        onChange={e => onChange(e)}
+                        onChange={onChange}
                     />
                 </div>
                 <div className="form-group">
@@ -92,13 +92,13 @@ const AddEducation = ({ addEducation, history }) => {
                         type="checkbox"
                         id="current"
                         name="current"
+                        value={current}
                         checked={current}
                         onChange={e => {
                             setFormData({
                                 ...formData,
                                 current: !current
                             });
-                            toggleDisabled(!toDateDisabled);
                         }}
                     /> {' '}
                     <label htmlFor='current'>Current School or Bootcamp</label>
@@ -109,8 +109,8 @@ const AddEducation = ({ addEducation, history }) => {
                         type="date"
                         name="to"
                         value={to}
-                        onChange={e => onChange(e)}
-                        disabled={toDateDisabled ? 'disabled' : ''}
+                        onChange={onChange}
+                        disabled={current}
                     />
                 </div>
                 <div className="form-group">
@@ -119,14 +119,14 @@ const AddEducation = ({ addEducation, history }) => {
                         cols="30"
                         rows="5"
                         value={description}
-                        onChange={e => onChange(e)}
+                        onChange={onChange}
                         placeholder="Program Description"
                     ></textarea>
                 </div>
                 <input type="submit" className="btn btn-primary my-1" />
                 <Link className="btn btn-light my-1" to="/dashboard">Go Back</Link>
             </form>
-        </>
+        </section>
     )
 }
 
@@ -134,4 +134,4 @@ AddEducation.propTypes = {
     addEducation: PropTypes.func.isRequired,
 }
 
-export default connect(null, { addEducation })(withRouter(AddEducation));
+export default connect(null, { addEducation })(AddEducation);

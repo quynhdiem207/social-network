@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { decode } from 'html-entities';
+import { decodeHTML5 } from "entities";
 import { setAlert } from "./alert";
 import {
     GET_PROFILE,
@@ -16,13 +16,16 @@ export const getCurrentProfile = () => async dispatch => {
     try {
         const res = await axios.get('/api/me/profile');
 
+        const data = JSON.parse(decodeHTML5(JSON.stringify(res.data)));
+
         dispatch({
             type: GET_PROFILE,
-            payload: JSON.parse(decode(JSON.stringify(res.data)))
+            payload: data
         });
     } catch (err) {
         // clear profile that guest viewed when register
         dispatch({ type: CLEAR_PROFILE });
+
         dispatch({
             type: PROFILE_ERROR,
             payload: {
@@ -62,9 +65,11 @@ export const getProfileById = userId => async dispatch => {
     try {
         const res = await axios.get(`/api/profiles/user/${userId}`);
 
+        const data = JSON.parse(decodeHTML5(JSON.stringify(res.data)));
+
         dispatch({
             type: GET_PROFILE,
-            payload: JSON.parse(decode(JSON.stringify(res.data)))
+            payload: data
         });
     } catch (err) {
         dispatch({
@@ -98,7 +103,7 @@ export const getGithubRepos = username => async dispatch => {
 }
 
 // Create or Update Profile
-export const createProfile = (formData, history, edit = false) => async dispatch => {
+export const createProfile = (formData, navigate, edit = false) => async dispatch => {
     const config = {
         headers: { 'Content-Type': 'application/json' }
     }
@@ -106,15 +111,17 @@ export const createProfile = (formData, history, edit = false) => async dispatch
     try {
         const res = await axios.post('/api/me/profile', formData, config);
 
+        const data = JSON.parse(decodeHTML5(JSON.stringify(res.data)));
+
         dispatch({
             type: GET_PROFILE,
-            payload: res.data
+            payload: data
         });
 
         dispatch(setAlert(edit ? 'Profile updated' : 'Profile created', 'success'));
 
         if (!edit) {
-            history.push('./dashboard');
+            navigate('/dashboard');
         }
     } catch (err) {
         const errors = err.response.data;
@@ -131,7 +138,7 @@ export const createProfile = (formData, history, edit = false) => async dispatch
 }
 
 // Add Experience
-export const addExperience = (formData, history) => async dispatch => {
+export const addExperience = (formData, navigate) => async dispatch => {
     const config = {
         headers: { 'Content-Type': 'application/json' }
     }
@@ -146,7 +153,7 @@ export const addExperience = (formData, history) => async dispatch => {
 
         dispatch(setAlert('Experience added', 'success'));
 
-        history.push('./dashboard');
+        navigate('/dashboard');
     } catch (err) {
         const errors = err.response.data;
         errors.forEach(error => dispatch(setAlert(error, 'danger')));
@@ -162,7 +169,7 @@ export const addExperience = (formData, history) => async dispatch => {
 }
 
 // Add Education
-export const addEducation = (formData, history) => async dispatch => {
+export const addEducation = (formData, navigate) => async dispatch => {
     const config = {
         headers: { 'Content-Type': 'application/json' }
     }
@@ -177,7 +184,7 @@ export const addEducation = (formData, history) => async dispatch => {
 
         dispatch(setAlert('Education added', 'success'));
 
-        history.push('./dashboard');
+        navigate('/dashboard');
     } catch (err) {
         const errors = err.response.data;
         errors.forEach(error => dispatch(setAlert(error, 'danger')));

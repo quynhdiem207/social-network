@@ -1,5 +1,5 @@
-import { Fragment, useState } from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, Navigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from "prop-types";
 
@@ -21,7 +21,7 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
         [e.target.name]: e.target.value
     })
 
-    const onSubmit = async e => {
+    const onSubmit = e => {
         e.preventDefault();
         if (password !== password2) {
             setAlert('Password do not match!', 'danger');
@@ -31,21 +31,22 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
     }
 
     if (isAuthenticated) {
-        return <Redirect to='/dashboard' />
+        return <Navigate to='/dashboard' />
     }
 
     return (
-        <Fragment>
+        <section className="container">
+
             <h1 className="large text-primary">Sign Up</h1>
             <p className="lead"><i className="fas fa-user"></i> Create Your Account</p>
-            <form className="form" onSubmit={e => onSubmit(e)}>
+            <form className="form" onSubmit={onSubmit}>
                 <div className="form-group">
                     <input
                         type="text"
                         placeholder="Name"
                         name="name"
                         value={name}
-                        onChange={e => onChange(e)}
+                        onChange={onChange}
                         required
                     />
                 </div>
@@ -55,7 +56,7 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
                         placeholder="Email Address"
                         name="email"
                         value={email}
-                        onChange={e => onChange(e)}
+                        onChange={onChange}
                         required
                     />
                     <small className="form-text">
@@ -68,7 +69,7 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
                         placeholder="Password"
                         name="password"
                         value={password}
-                        onChange={e => onChange(e)}
+                        onChange={onChange}
                         minLength="8"
                     />
                 </div>
@@ -78,7 +79,7 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
                         placeholder="Confirm Password"
                         name="password2"
                         value={password2}
-                        onChange={e => onChange(e)}
+                        onChange={onChange}
                         minLength="8"
                     />
                 </div>
@@ -87,7 +88,7 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
             <p className="my-1">
                 Already have an account? <Link to="/login">Sign In</Link>
             </p>
-        </Fragment>
+        </section>
     )
 }
 

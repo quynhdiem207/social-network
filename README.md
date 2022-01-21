@@ -28,7 +28,7 @@ MongoDB + Express + ReactJS + NodeJS
 - [validator](https://www.npmjs.com/package/validator) / [express-validator](https://express-validator.github.io/docs/) / [Joi](https://joi.dev/api/?v=17.4.2): Validate giá trị input.  
 - [await-to-js](https://www.npmjs.com/package/await-to-js): Hữu ích xử lý lỗi async/await.  
 - [cross-env](https://www.npmjs.com/package/cross-env): Truyền biến môi trường khi chạy command line.  
-- [html-entities](https://www.npmjs.com/package/html-entities): encode & decode HTML entities.  
+- [entities](https://www.npmjs.com/package/entities): encode & decode HTML entities.  
 
 ### Libraries for dev:  
 

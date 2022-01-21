@@ -15,13 +15,6 @@ profileRouter.delete('/', ProfileController.delete)
 profileRouter.post('/', ProfileController.store)
 profileRouter.get('/', ProfileController.show)
 
-postRouter.delete('/:id/comments/:comment_id', PostController.deleteComment)
-postRouter.post('/:id/comments', PostController.createComment)
-postRouter.patch('/:id/unlike', PostController.unlike)
-postRouter.patch('/:id/like', PostController.like)
-postRouter.delete('/:id', PostController.delete)
-postRouter.get('/:id', PostController.getById)
-postRouter.post('/', PostController.store)
 postRouter.get('/', PostController.getAll)
 
 // const passport = require('passport');

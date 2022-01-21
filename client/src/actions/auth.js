@@ -54,6 +54,7 @@ export const register = ({ name, email, password }) => async dispatch => {
     } catch (err) {
         const errors = err.response.data;
         errors.forEach(error => dispatch(setAlert(error, 'danger')));
+
         dispatch({
             type: REGISTER_FAIL
         });
@@ -79,6 +80,7 @@ export const login = (email, password) => async dispatch => {
     } catch (err) {
         const errors = err.response.data;
         errors.forEach(error => dispatch(setAlert(error, 'danger')));
+
         dispatch({
             type: LOGIN_FAIL
         });
@@ -86,8 +88,8 @@ export const login = (email, password) => async dispatch => {
 }
 
 // Logout / Clear profile
-export const logout = (history) => dispatch => {
+export const logout = (navigate) => dispatch => {
     dispatch({ type: CLEAR_PROFILE });
     dispatch({ type: LOGOUT });
-    history.push('/login')
+    navigate('/')
 }
