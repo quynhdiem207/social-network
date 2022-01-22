@@ -1,8 +1,9 @@
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Provider } from "react-redux";
 
 import store from "./store";
+import setReqApiConfig from "./utils/setReqApiConfig";
 import setAuthToken from "./utils/setAuthToken";
 import { loadUser } from './actions/auth';
 
@@ -15,7 +16,6 @@ import { Login } from "./components/auth";
 import { Register } from "./components/auth";
 
 import Dashboard from "./components/dashboard/Dashboard";
-// import { CreateProfile } from "./components/profile-forms";
 import { ProfileForm } from "./components/profile-forms";
 import { AddExperience } from "./components/profile-forms";
 import { AddEducation } from "./components/profile-forms";
@@ -29,11 +29,15 @@ import PrivateRoute from "./components/routing/PrivateRoute";
 
 const App = () => {
 
-    useEffect(() => {
+    useLayoutEffect(() => {
+        // set defaults config for all requests
+        setReqApiConfig();
+
         // check for token in Local Storage when app first runs
-        if (localStorage.token) {
+        const token = localStorage.getItem('token');
+        if (token) {
             // if there is a token set axios headers for all requests
-            setAuthToken(localStorage.token);
+            setAuthToken(token);
         }
 
         // try to fetch a user, if no token or invalid token we will get a 401 response from our API
