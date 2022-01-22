@@ -26,6 +26,8 @@ import Profile from "./components/profile/Profile";
 import Posts from "./components/posts/Posts";
 import Post from "./components/post/Post";
 
+import { NotFound } from "./components/layouts";
+
 import PrivateRoute from "./components/routing/PrivateRoute";
 
 const App = () => {
@@ -96,6 +98,10 @@ const App = () => {
                         <Route
                             path="post/:id"
                             element={<PrivateRoute component={Post} />}
+                        />
+                        <Route
+                            path="/*"
+                            element={<NotFound />}
                         />
                     </Routes>
                 </GlobalStyles>
