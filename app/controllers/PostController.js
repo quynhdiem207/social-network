@@ -74,7 +74,7 @@ class PostController extends BaseController {
             // check author
             if (String(post.user) !== req.user._id) {
                 const msg = 'User not authorized!'
-                return res.status(401).json([msg])
+                return res.status(400).json([msg])
             }
             await post.remove()
             return res.json('Post removed')
@@ -194,7 +194,7 @@ class PostController extends BaseController {
             // check author
             if (comment.user.toString() !== req.user._id) {
                 const msg = 'User not authorized!'
-                return res.status(401).json([msg])
+                return res.status(400).json([msg])
             }
             const index = post.comments.map(item => String(item._id))
                 .indexOf(req.params.comment_id)

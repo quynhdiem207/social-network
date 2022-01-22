@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import clsx from 'clsx';
+import { decodeHTML5 } from "entities";
 
 import { addLike, removeLike, deletePost } from "../../actions/post";
 import formatDate from "../../utils/formatDate";
@@ -22,7 +23,7 @@ const PostItem = ({
             </Link>
         </div>
         <div>
-            <p className="my-1">{text}</p>
+            <p className="my-1">{decodeHTML5(text)}</p>
             <p className={styles.postDate}>
                 Posted on {formatDate(createdAt)}
             </p>

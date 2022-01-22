@@ -9,6 +9,7 @@ import Experience from './Experience';
 import Education from './Education';
 import { Modal } from "../layouts";
 import { getCurrentProfile, deleteAccount } from '../../actions/profile';
+import styles from "../scss/Dashboard.module.scss";
 
 const Dashboard = ({
     getCurrentProfile,
@@ -68,9 +69,9 @@ const Dashboard = ({
                 />
             )}
 
-            <div className="my-2">
+            <div className={clsx(styles.dashButtons, "my-2")}>
                 <button
-                    className="btn btn-danger"
+                    className="btn btn-light"
                     onClick={onDeleteAccount}
                 >
                     <i className="fas fa-user-minus"></i> {' '}
