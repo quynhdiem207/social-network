@@ -1,0 +1,46 @@
+@use 'variables' as *;
+
+.postForm .postFormHeader {
+    background: $primary-color;
+    padding: 0.5rem;
+}
+
+.post {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    grid-gap: 2rem;
+    align-items: center;
+
+    > div:first-child {
+        text-align: center;
+    }
+
+    img {
+        width: 100px;
+    }
+
+    .commentCount {
+        background: $light-color;
+        color: $primary-color;
+        padding: 0.1rem 0.2rem;
+        border-radius: 5px;
+        font-size: 0.8rem;
+    }
+
+    .postDate {
+        color: #aaa;
+        font-size: 0.8rem;
+        margin-bottom: 0.5rem;
+    }
+
+}
+
+@media (max-width: 700px) {
+    .post {
+        grid-template-columns: 1fr;
+
+        a, button {
+            padding: 0.3rem 0.4rem;
+        }
+    }
+}

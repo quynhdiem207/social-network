@@ -5,7 +5,6 @@ const PostController = require('@app/controllers/PostController')
 
 const router = express.Router();
 const profileRouter = express.Router();
-const postRouter = express.Router();
 
 profileRouter.delete('/experience/:exp_id', ProfileController.deleteExperience)
 profileRouter.delete('/education/:edu_id', ProfileController.deleteEducation)
@@ -15,14 +14,12 @@ profileRouter.delete('/', ProfileController.delete)
 profileRouter.post('/', ProfileController.store)
 profileRouter.get('/', ProfileController.show)
 
-postRouter.get('/', PostController.getAll)
-
 // const passport = require('passport');
 // const AuthPassportMiddleware = require('@root/app/middlewares/AuthPassportMiddleware');
 // passport.use(AuthPassportMiddleware)
 // router.use(passport.authenticate('jwt', { session: false }))
 
 router.use('/profile', profileRouter)
-router.use('/posts', postRouter)
+router.use('/posts', PostController.getAll)
 
 module.exports = router;
