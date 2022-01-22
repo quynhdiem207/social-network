@@ -31,21 +31,44 @@
             margin-right: 0.6rem;
         }
     }
+
+    .menuIcon {
+        display: none;
+    }
 }
 
 /* Mobile Styles */
 @media (max-width: 700px) {
     .navbar {
-        display: block;
-        text-align: center;
+        .menuIcon {
+            display: inline-block;
+            font-size: 1.5rem;
+        }    
 
-        ul {
-            text-align: center;
-            justify-content: center;
+        .subnav {
+            position: absolute;
+            top: 3.8rem;
+            transition: right 1s;
+
+            display: block;    
+            min-width: 200px;
+            background-color: $dark-color;
+            border: 1px solid #aaa;
+            border-radius: 4px;
+            line-height: 1.8rem;
+            box-shadow: 8px 4px 8px $gray-color;
+
+            a {
+                display: block;
+            }
         }
 
-        h1 {
-            margin-bottom: 1rem;
+        .display {
+            right: 0;
+        }
+
+        .notDisplay {
+            right: calc(-100%);
         }
 
         .welcome {
