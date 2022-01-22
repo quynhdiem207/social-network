@@ -5,7 +5,8 @@ import {
     UPDATE_LIKES,
     UPDATE_COMMENT,
     DELETE_POST,
-    ADD_POST
+    ADD_POST,
+    GET_POST
 } from "./types";
 import { setAlert } from "./alert";
 
@@ -115,6 +116,26 @@ export const addPost = formData => async (dispatch) => {
         const errors = err.response.data;
         errors.forEach(error => dispatch(setAlert(error, 'danger')));
 
+        dispatch({
+            type: POST_ERROR,
+            payload: {
+                msg: err.response.statusText,
+                status: err.response.status
+            }
+        });
+    }
+};
+
+// Get a post
+export const getPost = postId => async (dispatch) => {
+    try {
+        const res = await axios.get(`/posts/${postId}`);
+
+        dispatch({
+            type: GET_POST,
+            payload: res.data
+        });
+    } catch (err) {
         dispatch({
             type: POST_ERROR,
             payload: {

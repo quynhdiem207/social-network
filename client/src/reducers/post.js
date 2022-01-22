@@ -4,7 +4,8 @@ import {
     UPDATE_LIKES,
     UPDATE_COMMENT,
     DELETE_POST,
-    ADD_POST
+    ADD_POST,
+    GET_POST
 } from "../actions/types";
 
 const initialState = {
@@ -22,6 +23,12 @@ const Post = (state = initialState, action) => {
             return {
                 ...state,
                 posts: payload,
+                loading: false
+            };
+        case GET_POST:
+            return {
+                ...state,
+                post: payload,
                 loading: false
             };
         case DELETE_POST:

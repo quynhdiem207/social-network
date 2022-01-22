@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "react";
+import { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Provider } from "react-redux";
 
@@ -24,12 +24,13 @@ import Profiles from "./components/profiles/Profiles";
 import Profile from "./components/profile/Profile";
 
 import Posts from "./components/posts/Posts";
+import Post from "./components/post/Post";
 
 import PrivateRoute from "./components/routing/PrivateRoute";
 
 const App = () => {
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         // set defaults config for all requests
         setReqApiConfig();
 
@@ -91,6 +92,10 @@ const App = () => {
                         <Route
                             path="posts"
                             element={<PrivateRoute component={Posts} />}
+                        />
+                        <Route
+                            path="post/:id"
+                            element={<PrivateRoute component={Post} />}
                         />
                     </Routes>
                 </GlobalStyles>
