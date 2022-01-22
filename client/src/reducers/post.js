@@ -2,10 +2,11 @@ import {
     GET_POSTS,
     POST_ERROR,
     UPDATE_LIKES,
-    UPDATE_COMMENT,
     DELETE_POST,
     ADD_POST,
-    GET_POST
+    GET_POST,
+    ADD_COMMENT,
+    REMOVE_COMMENT
 } from "../actions/types";
 
 const initialState = {
@@ -59,12 +60,24 @@ const Post = (state = initialState, action) => {
                 ),
                 loading: false
             };
-        case UPDATE_COMMENT:
+        case ADD_COMMENT:
             return {
                 ...state,
-                posts: state.posts.map(post => (post._id === payload.postId ? {
-                    ...post, comments: payload.comments
-                } : post)),
+                post: {
+                    ...state.post,
+                    comments: payload
+                },
+                loading: false
+            };
+        case REMOVE_COMMENT:
+            return {
+                ...state,
+                post: {
+                    ...state.post,
+                    comments: state.post.comments.filter(comment => (
+                        comment._id !== payload
+                    ))
+                },
                 loading: false
             };
         default:

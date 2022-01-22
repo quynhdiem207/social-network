@@ -2,12 +2,12 @@ import React, { useEffect } from 'react';
 import { Link, useParams } from "react-router-dom";
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
-import { decodeHTML5 } from "entities";
 
 import { getPost } from '../../actions/post';
 import PostItem from "../posts/PostItem";
+import CommentForm from "./CommentForm";
+import CommentItem from "./CommentItem";
 import { Spinner } from '../layouts';
-import styles from "../scss/Post.module.scss";
 
 const Post = ({ getPost, post: { post, loading } }) => {
     const { id } = useParams();
@@ -21,6 +21,16 @@ const Post = ({ getPost, post: { post, loading } }) => {
             <section className='container'>
                 <Link to="/posts" className="btn">Back To Posts</Link>
                 <PostItem post={post} showActions={false} />
+                <CommentForm postId={id} />
+                <div className="comments">
+                    {post.comments.map(comment => (
+                        <CommentItem
+                            key={comment._id}
+                            comment={comment}
+                            postId={id}
+                        />
+                    ))}
+                </div>
             </section>
         )
     );
