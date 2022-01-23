@@ -3,7 +3,6 @@ const express = require('express');
 // const passport = require('passport')
 const path = require('path')
 
-const serverConfig = require('./config/server')
 const db = require('@libs/Database')
 const routes = require('./routes')
 
@@ -31,7 +30,4 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // start server
-app.listen(
-    serverConfig.PORT,
-    () => console.log(`Server running on ${serverConfig.HOST}:${serverConfig.PORT}`)
-);
+app.listen(process.env.PORT || 5001);
