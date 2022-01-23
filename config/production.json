@@ -1,0 +1,6 @@
+{
+    "auth": {
+        "JWT_EXPIRE_USER": 86400,
+        "JWT_REFRESH_TIME": 3600
+    }
+}
