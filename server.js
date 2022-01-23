@@ -13,13 +13,22 @@ const app = express();
 db.connect()
 
 // middleware
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ extended: true, limit: '50mb' }));
 // app.use(passport.initialize());
 
 // routes
 routes(app)
+
+// Serve static assets in production
+if (process.env.NODE_ENV === 'production') {
+    // Set static folder
+    app.use(express.static('client/build'));
+
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+    })
+}
 
 // start server
 app.listen(
