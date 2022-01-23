@@ -12,7 +12,7 @@
         "server": "nodemon server.js",
         "client": "yarn --cwd client start",
         "dev": "concurrently \"yarn server\" \"yarn client\"",
-        "heroku-postbuild": "YARN_CONFIG_PRODUCTION=false yarn add --cwd client && yarn --cwd client build"
+        "heroku-postbuild": "YARN_PRODUCTION=false yarn add --cwd client && yarn --cwd client build"
     },
     "dependencies": {
         "await-to-js": "^3.0.0",
