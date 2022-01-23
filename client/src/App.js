@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Provider } from "react-redux";
 
@@ -30,9 +30,11 @@ import { NotFound } from "./components/layouts";
 
 import PrivateRoute from "./components/routing/PrivateRoute";
 
+import { LOGOUT } from "./actions/types";
+
 const App = () => {
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         // set defaults config for all requests
         setReqApiConfig();
 
@@ -45,6 +47,11 @@ const App = () => {
 
         // try to fetch a user, if no token or invalid token we will get a 401 response from our API
         store.dispatch(loadUser());
+
+        // log user out from all tabs if they log out in one tab
+        window.addEventListener('storage', () => {
+            if (!localStorage.token) store.dispatch({ type: LOGOUT });
+        });
     }, [])
 
     return (
@@ -93,11 +100,11 @@ const App = () => {
                         />
                         <Route
                             path="posts"
-                            element={<PrivateRoute component={Posts} />}
+                            element={<Posts />}
                         />
                         <Route
                             path="post/:id"
-                            element={<PrivateRoute component={Post} />}
+                            element={<Post />}
                         />
                         <Route
                             path="/*"

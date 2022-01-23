@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -11,24 +11,17 @@ const Navbar = ({ auth: { isAuthenticated }, logout }) => {
     const navigate = useNavigate();
 
     const [displaySubnav, toggleSubnav] = useState(false);
-    const subnav = useRef();
-
-    useEffect(() => {
-        if (displaySubnav) {
-            subnav.current.classList.remove(styles.notDisplay);
-            subnav.current.classList.add(styles.display);
-        } else {
-            subnav.current.classList.remove(styles.display);
-            subnav.current.classList.add(styles.notDisplay);
-        }
-    }, [displaySubnav]);
 
     const guestLinks = (
         <ul
-            ref={subnav}
-            className={styles.subnav}
+            className={clsx(styles.subnav, {
+                [styles.display]: displaySubnav,
+                [styles.notDisplay]: !displaySubnav
+            })}
+            onClick={() => toggleSubnav(false)}
         >
             <li><Link to="/profiles">Developers</Link></li>
+            <li><Link to="/posts">Posts</Link></li>
             <li><Link to="/register">Register</Link></li>
             <li><Link to="/login">Login</Link></li>
         </ul>
@@ -36,8 +29,11 @@ const Navbar = ({ auth: { isAuthenticated }, logout }) => {
 
     const authLinks = (
         <ul
-            ref={subnav}
-            className={styles.subnav}
+            className={clsx(styles.subnav, {
+                [styles.display]: displaySubnav,
+                [styles.notDisplay]: !displaySubnav
+            })}
+            onClick={() => toggleSubnav(false)}
         >
             <li><Link to="/profiles">Developers</Link></li>
             <li><Link to="/posts">Posts</Link></li>
@@ -57,7 +53,10 @@ const Navbar = ({ auth: { isAuthenticated }, logout }) => {
     return (
         <nav className={clsx(styles.navbar, 'bg-dark')}>
             <h1>
-                <Link to="/"><i className="fas fa-code"></i> DevConnector</Link>
+                <Link to="/">
+                    <i className="fas fa-code"></i> {' '}
+                    <span className={styles.hideXS}>DevConnector</span>
+                </Link>
             </h1>
             <div>
                 <div

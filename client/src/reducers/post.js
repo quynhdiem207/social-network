@@ -51,13 +51,20 @@ const Post = (state = initialState, action) => {
                 loading: false
             };
         case UPDATE_LIKES:
-            return {
+            return payload.isPostList ? {
                 ...state,
                 posts: state.posts.map(post => (
                     post._id === payload.postId ? {
                         ...post, likes: payload.likes
                     } : post)
                 ),
+                loading: false
+            } : {
+                ...state,
+                post: {
+                    ...state.post,
+                    likes: payload.likes
+                },
                 loading: false
             };
         case ADD_COMMENT:

@@ -30,7 +30,7 @@ const CommentItem = ({
             <p className={styles.postDate}>
                 Posted on {formatDate(date)}
             </p>
-            {!auth.loading && user === auth.user._id && (
+            {auth.isAuthenticated && user === auth.user._id && (
                 <button
                     onClick={() => deleteComment(postId, _id)}
                     className="btn btn-danger"

@@ -32,13 +32,13 @@ export const getPosts = () => async (dispatch) => {
 };
 
 // Add like
-export const addLike = postId => async (dispatch) => {
+export const addLike = (postId, isPostList = true) => async (dispatch) => {
     try {
         const res = await axios.patch(`/posts/${postId}/like`);
 
         dispatch({
             type: UPDATE_LIKES,
-            payload: { postId, likes: res.data }
+            payload: { postId, likes: res.data, isPostList }
         });
     } catch (err) {
         const errors = err.response.data;
@@ -55,13 +55,13 @@ export const addLike = postId => async (dispatch) => {
 };
 
 // Remove like
-export const removeLike = postId => async (dispatch) => {
+export const removeLike = (postId, isPostList = true) => async (dispatch) => {
     try {
         const res = await axios.patch(`/posts/${postId}/unlike`);
 
         dispatch({
             type: UPDATE_LIKES,
-            payload: { postId, likes: res.data }
+            payload: { postId, likes: res.data, isPostList }
         });
     } catch (err) {
         const errors = err.response.data;

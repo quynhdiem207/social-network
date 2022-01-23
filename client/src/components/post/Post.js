@@ -8,8 +8,9 @@ import PostItem from "../posts/PostItem";
 import CommentForm from "./CommentForm";
 import CommentItem from "./CommentItem";
 import { Spinner } from '../layouts';
+import styles from '../scss/Post.module.scss';
 
-const Post = ({ getPost, post: { post, loading } }) => {
+const Post = ({ getPost, post: { post, loading }, auth }) => {
     const { id } = useParams();
 
     useEffect(() => {
@@ -20,9 +21,9 @@ const Post = ({ getPost, post: { post, loading } }) => {
         loading || post === null ? <Spinner /> : (
             <section className='container'>
                 <Link to="/posts" className="btn">Back To Posts</Link>
-                <PostItem post={post} showActions={false} />
-                <CommentForm postId={id} />
-                <div className="comments">
+                <PostItem post={post} showActions={false} isPostList={false} />
+                {auth.isAuthenticated && <CommentForm postId={id} />}
+                <div className={styles.comments}>
                     {post.comments.map(comment => (
                         <CommentItem
                             key={comment._id}
@@ -38,11 +39,13 @@ const Post = ({ getPost, post: { post, loading } }) => {
 
 Post.propTypes = {
     getPost: PropTypes.func.isRequired,
-    post: PropTypes.object.isRequired
+    post: PropTypes.object.isRequired,
+    auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-    post: state.post
+    post: state.post,
+    auth: state.auth
 })
 
 export default connect(mapStateToProps, { getPost })(Post);

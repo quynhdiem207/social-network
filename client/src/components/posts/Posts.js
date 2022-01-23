@@ -7,7 +7,7 @@ import PostForm from './PostForm';
 import PostItem from './PostItem';
 import { Spinner } from "../layouts";
 
-const Posts = ({ post: { posts, loading }, getPosts }) => {
+const Posts = ({ post: { posts, loading }, getPosts, auth }) => {
     useEffect(() => {
         getPosts();
     }, [getPosts]);
@@ -22,11 +22,12 @@ const Posts = ({ post: { posts, loading }, getPosts }) => {
                     <i className="fas fa-user"></i> Welcome to the community!
                 </p>
 
-                <PostForm />
+                {/* <PostForm /> */}
+                {auth.isAuthenticed && <PostForm />}
 
                 <div className="posts">
                     {posts.map(post => (
-                        <PostItem key={post._id} post={post} />
+                        <PostItem key={post._id} post={post} isPostList />
                     ))}
                 </div>
             </section>
@@ -36,11 +37,13 @@ const Posts = ({ post: { posts, loading }, getPosts }) => {
 
 Posts.propTypes = {
     getPosts: PropTypes.func.isRequired,
-    post: PropTypes.object.isRequired
+    post: PropTypes.object.isRequired,
+    auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-    post: state.post
+    post: state.post,
+    auth: state.auth
 })
 
 export default connect(mapStateToProps, { getPosts })(Posts);

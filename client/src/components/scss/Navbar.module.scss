@@ -76,3 +76,11 @@
         }
     }
 }
+
+@media (max-width: 350px) {
+    .navbar {
+        .hideXS {
+            display: none;
+        }
+    }
+}
