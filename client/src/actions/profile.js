@@ -44,8 +44,6 @@ export const getProfiles = () => async (dispatch) => {
         type: CLEAR_PROFILE
     })
 
-    console.log('Action: getProfiles');
-
     try {
         const res = await axios.get('/profiles');
 

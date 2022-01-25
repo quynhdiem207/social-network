@@ -1,6 +1,8 @@
 const Post = require('../models/Post');
 const User = require('../models/User');
-const BaseController = require('./BaseController')
+const Report = require('../models/Report');
+const BaseController = require('./BaseController');
+const Mailer = require('@libs/Mailer')
 
 class PostController extends BaseController {
 
@@ -201,6 +203,96 @@ class PostController extends BaseController {
             post.comments.splice(index, 1)
             await post.save()
             return res.json(post.comments)
+        } catch (err) {
+            if (err.kind == "ObjectId") {
+                const msg = 'Post not found!'
+                return res.status(404).json([msg])
+            }
+            next(err)
+        }
+    }
+
+    // @route   [POST] api/posts/report
+    // @desc    Report a post
+    // @access  Public
+    async report(req, res, next) {
+        const allowedInputs = {
+            _id: { type: 'string', required: true, isMongoId: true },
+            author: { type: 'string', required: true, isMongoId: true },
+            name: { type: 'string', required: true },
+            avatar: { type: 'string' },
+            text: { type: 'string' },
+            subject: { type: 'string', required: true },
+            detail: { type: 'string' }
+        }
+        let { error, errors } = await super.validate_1(req, allowedInputs)
+        if (error) return res.status(400).json(errors)
+
+        const { _id, subject, detail, ...other } = req.body
+
+        try {
+            const reportedPost = await Report.findOne({ post: _id })
+
+            if (reportedPost) {
+                const reported = reportedPost.reports.find(
+                    report => report.user == req.user._id
+                )
+
+                if (reported) {
+                    const msg = 'You have reported this post!'
+                    return res.status(404).json([msg])
+                }
+
+                reportedPost.reports.unshift({
+                    user: req.user._id,
+                    subject,
+                    detail,
+                    date: Date()
+                })
+
+                await reportedPost.save()
+            } else {
+                const newReport = new Report({
+                    post: _id,
+                    ...other,
+                    reports: [{
+                        user: req.user._id,
+                        subject,
+                        detail,
+                        date: Date()
+                    }]
+                })
+
+                await newReport.save()
+            }
+
+            const html = `
+                <h2>${subject}</h2>
+                <div>
+                    Post ID: <strong>${_id}</strong> of <strong>${other.name}</strong> 
+                    (user ID: <strong>${other.author}</strong>) is reported 
+                    <strong>
+                        ${reportedPost ? reportedPost.reports.length : 1} times.
+                    </strong>
+                </div>
+                <div style='margin: 20px 0'>Post's Detail:</div>
+                <ul>
+                    <li>Post ID: ${_id}</li>
+                    <li>
+                        <div>Author:</div>
+                        <ul>
+                            <li>ID: ${other.author}</li>
+                            <li>Name: ${other.name}</li>
+                            <li>Avatar: <img src='${other.avatar}' style='width: 100px' /></li>
+                        </ul>
+                    </li>
+                    <li>Content: ${other.text}</li>
+                </ul>
+            `
+
+            Mailer.sendMail('REPORT', html);
+
+            return res.json('Report Success')
         } catch (err) {
             if (err.kind == "ObjectId") {
                 const msg = 'Post not found!'

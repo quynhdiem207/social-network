@@ -24,17 +24,21 @@ const Dashboard = ({
 
     const [chooseDelete, setChooseDelete] = useState(false);
 
-    const onDeleteAccount = () => {
-        setChooseDelete(true);
-    }
-
     const onCancel = useCallback(() => {
         setChooseDelete(false);
     }, [])
 
-    const onDelete = useCallback(() => {
-        deleteAccount();
-    }, [deleteAccount])
+    const Delete = useCallback(() => (
+        <>
+            <div>Are you sure? This can NOT be undone!</div>
+            <button
+                className="btn btn-danger mt-2"
+                onClick={() => deleteAccount()}
+            >
+                Delete
+            </button>
+        </>
+    ), [deleteAccount]);
 
     return (
         <section className="container">
@@ -63,16 +67,15 @@ const Dashboard = ({
             {chooseDelete && (
                 <Modal
                     title='Delete Account'
-                    massage='Are you sure? This can NOT be undone!'
                     onCancel={onCancel}
-                    onOK={onDelete}
+                    component={Delete}
                 />
             )}
 
             <div className={clsx(styles.dashButtons, "my-2")}>
                 <button
                     className="btn btn-light"
-                    onClick={onDeleteAccount}
+                    onClick={() => setChooseDelete(true)}
                 >
                     <i className="fas fa-user-minus"></i> {' '}
                     Delete My Account

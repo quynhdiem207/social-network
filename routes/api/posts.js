@@ -4,6 +4,7 @@ const AuthMiddleware = require('@app/middlewares/AuthMiddleware')
 
 const router = express.Router();
 
+router.post('/report', AuthMiddleware, PostController.report)
 router.delete('/:id/comments/:comment_id', AuthMiddleware, PostController.deleteComment)
 router.post('/:id/comments', AuthMiddleware, PostController.createComment)
 router.patch('/:id/unlike', AuthMiddleware, PostController.unlike)

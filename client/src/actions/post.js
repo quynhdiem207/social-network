@@ -42,7 +42,8 @@ export const addLike = (postId, isPostList = true) => async (dispatch) => {
         });
     } catch (err) {
         const errors = err.response.data;
-        errors.forEach(error => dispatch(setAlert(error, 'light')));
+        Array.isArray(errors) &&
+            errors.forEach(error => dispatch(setAlert(error, 'light')));
 
         dispatch({
             type: POST_ERROR,
@@ -65,7 +66,8 @@ export const removeLike = (postId, isPostList = true) => async (dispatch) => {
         });
     } catch (err) {
         const errors = err.response.data;
-        errors.forEach(error => dispatch(setAlert(error, 'light')));
+        Array.isArray(errors) &&
+            errors.forEach(error => dispatch(setAlert(error, 'light')));
 
         dispatch({
             type: POST_ERROR,
@@ -90,7 +92,8 @@ export const deletePost = postId => async (dispatch) => {
         dispatch(setAlert('Post Removed!', 'success'));
     } catch (err) {
         const errors = err.response.data;
-        errors.forEach(error => dispatch(setAlert(error, 'danger')));
+        Array.isArray(errors) &&
+            errors.forEach(error => dispatch(setAlert(error, 'danger')));
 
         dispatch({
             type: POST_ERROR,
@@ -115,7 +118,8 @@ export const addPost = formData => async (dispatch) => {
         dispatch(setAlert('Post Created!', 'success'));
     } catch (err) {
         const errors = err.response.data;
-        errors.forEach(error => dispatch(setAlert(error, 'danger')));
+        Array.isArray(errors) &&
+            errors.forEach(error => dispatch(setAlert(error, 'danger')));
 
         dispatch({
             type: POST_ERROR,
@@ -160,7 +164,8 @@ export const addComment = (postId, formData) => async (dispatch) => {
         dispatch(setAlert('Comment Added!', 'success'));
     } catch (err) {
         const errors = err.response.data;
-        errors.forEach(error => dispatch(setAlert(error, 'danger')));
+        Array.isArray(errors) &&
+            errors.forEach(error => dispatch(setAlert(error, 'danger')));
 
         dispatch({
             type: POST_ERROR,
@@ -185,7 +190,29 @@ export const deleteComment = (postId, commentId) => async (dispatch) => {
         dispatch(setAlert('Comment Removed!', 'success'));
     } catch (err) {
         const errors = err.response.data;
-        errors.forEach(error => dispatch(setAlert(error, 'danger')));
+        Array.isArray(errors) &&
+            errors.forEach(error => dispatch(setAlert(error, 'danger')));
+
+        dispatch({
+            type: POST_ERROR,
+            payload: {
+                msg: err.response.statusText,
+                status: err.response.status
+            }
+        });
+    }
+};
+
+// Report post
+export const reportPost = (data) => async (dispatch) => {
+    try {
+        await axios.post('/posts/report', data);
+
+        dispatch(setAlert('Post Reported!', 'success'));
+    } catch (err) {
+        const errors = err.response.data;
+        Array.isArray(errors) &&
+            errors.forEach(error => dispatch(setAlert(error, 'danger')));
 
         dispatch({
             type: POST_ERROR,

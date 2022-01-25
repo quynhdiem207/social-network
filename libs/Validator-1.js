@@ -1,6 +1,7 @@
 const { body, validationResult } = require('express-validator');
 const _ = require('lodash');
 const entities = require('entities');
+const valid = require('validator');
 
 const isEmpty = (value) => {
     return (
@@ -67,7 +68,7 @@ const validateFields = async (req, allowInputs) => {
                     validator = validator.isLength(length)
                         .withMessage(validateError("length", { field, min: length.min, max: length.max }))
                 }
-                validator = validator.escape()
+                // validator = validator.escape()
                 break
             case "number":
                 if (!_.isEmpty(length))
@@ -101,8 +102,10 @@ const validateFields = async (req, allowInputs) => {
         for (let condition in conditions) {
             if (conditions[condition] == true) {
                 validator = validator.custom(
-                    (v) => entities.decodeHTML(req.body[field])
+                    (v) => valid[condition](entities.decodeHTML(v))
                 ).withMessage(validateError("isValid", { field }))
+                // validator = validator[condition]()
+                //     .withMessage(validateError("isValid", { field }))
             }
         }
 

@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import clsx from 'clsx';
 import { decodeHTML5 } from "entities";
 
-import { addLike, removeLike, deletePost } from "../../actions/post";
+import { addLike, removeLike, deletePost, reportPost } from "../../actions/post";
+import { Modal } from "../layouts";
+import ReportPost from "./ReportPost";
 import formatDate from "../../utils/formatDate";
 import styles from "../scss/Post.module.scss";
 
@@ -13,6 +15,7 @@ const PostItem = ({
     addLike,
     removeLike,
     deletePost,
+    reportPost,
     auth,
     post: { _id, user, name, avatar, text, likes, comments, createdAt },
     showActions,
@@ -23,6 +26,20 @@ const PostItem = ({
         const liked = likes.find(like => like.user === auth.user._id);
         return liked ? true : false;
     });
+
+    const [report, setReport] = useState(false);
+
+    const onCancel = useCallback(() => {
+        setReport(false);
+    }, [])
+
+    const Report = useCallback(() => (
+        <ReportPost
+            onReport={reportPost}
+            post={{ _id, author: user, name, avatar, text, createdAt }}
+            onCancel={onCancel}
+        />
+    ), [reportPost, _id])
 
     return (
         <div className={clsx(styles.post, "bg-white", "p-1", "my-1")}>
@@ -64,6 +81,16 @@ const PostItem = ({
                         )}
                     </>
                 )}
+                {auth.isAuthenticated && user !== auth.user._id && (
+                    <button onClick={() => setReport(true)} className="btn btn-light">
+                        Report
+                    </button>
+                )}
+                {report && <Modal
+                    title="Report"
+                    onCancel={onCancel}
+                    component={Report}
+                />}
             </div>
         </div>
     );
@@ -79,6 +106,7 @@ PostItem.propTypes = {
     addLike: PropTypes.func.isRequired,
     removeLike: PropTypes.func.isRequired,
     deletePost: PropTypes.func.isRequired,
+    reportPost: PropTypes.func.isRequired,
     isPostList: PropTypes.bool.isRequired
 };
 
@@ -88,5 +116,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    { addLike, removeLike, deletePost }
+    { addLike, removeLike, deletePost, reportPost }
 )(PostItem);

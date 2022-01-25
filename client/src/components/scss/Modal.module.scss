@@ -27,15 +27,17 @@
         padding: 20px;
         border: 1px solid #888;
         border-radius: 8px;
+        min-width: 300px;
         
         .modalHeader {
             border-bottom: 1px solid gray;
-        }
-        
-        .modalFooter {
             display: flex;
             align-items: center;
-            justify-content: flex-end;
+            justify-content: space-between;
+
+            button {
+                margin-bottom: 1rem;
+            }
         }
     }
 }
