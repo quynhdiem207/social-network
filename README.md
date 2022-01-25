@@ -15,3 +15,4 @@ Features:
 - Like / Unlike a post.  
 - Comment.  
 - Delete a comment.  
+- Report a post.  
